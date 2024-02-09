@@ -39,3 +39,4 @@ explore: dim_divisas {}
 explore: dim_grupoclientes {}
 explore: dim_material {}
 explore: dim_planta {}
+explore: dim_grupomateriales {}
