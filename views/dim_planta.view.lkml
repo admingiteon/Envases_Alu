@@ -1,7 +1,7 @@
 
 view: dim_planta {
   derived_table: {
-    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Planta` LIMIT 10 ;;
+    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Planta` ;;
   }
 
   measure: count {
@@ -37,10 +37,10 @@ view: dim_planta {
   set: detail {
     fields: [
         id_fuente,
-	id_planta,
-	nombre_planta,
-	ciudad,
-	pais
+  id_planta,
+  nombre_planta,
+  ciudad,
+  pais
     ]
   }
 }

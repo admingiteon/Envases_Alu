@@ -2,7 +2,7 @@
 
 view: dim_grupomateriales {
   derived_table: {
-    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_GrupoMateriales` LIMIT 10 ;;
+    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_GrupoMateriales` ;;
   }
 
   measure: count {

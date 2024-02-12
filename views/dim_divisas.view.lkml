@@ -1,7 +1,7 @@
 
 view: dim_divisas {
   derived_table: {
-    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Divisas` LIMIT 10 ;;
+    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Divisas`  ;;
   }
 
   measure: count {
@@ -38,10 +38,10 @@ view: dim_divisas {
   set: detail {
     fields: [
         id_fuente,
-	fecha,
-	moneda_origen,
-	moneda_conversion,
-	tipo_cambio
+  fecha,
+  moneda_origen,
+  moneda_conversion,
+  tipo_cambio
     ]
   }
 }

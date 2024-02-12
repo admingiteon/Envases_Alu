@@ -1,7 +1,7 @@
 
 view: dim_material {
   derived_table: {
-    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Material` LIMIT 10 ;;
+    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Material`  ;;
   }
 
   measure: count {
@@ -42,11 +42,11 @@ view: dim_material {
   set: detail {
     fields: [
         id_fuente,
-	material,
-	descripcion,
-	grupo_mat,
-	dimensiones,
-	jerarquia
+  material,
+  descripcion,
+  grupo_mat,
+  dimensiones,
+  jerarquia
     ]
   }
 }

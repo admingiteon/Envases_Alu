@@ -1,7 +1,7 @@
 
 view: dim_cliente {
   derived_table: {
-    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Cliente` LIMIT 10 ;;
+    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Dim_Cliente`  ;;
   }
 
   measure: count {
@@ -57,14 +57,14 @@ view: dim_cliente {
   set: detail {
     fields: [
         id_fuente,
-	codigo_cliente,
-	organizacion_ventas,
-	canal_distribucion,
-	division,
-	nombre,
-	pais,
-	ciudad,
-	grupo_ventas
+  codigo_cliente,
+  organizacion_ventas,
+  canal_distribucion,
+  division,
+  nombre,
+  pais,
+  ciudad,
+  grupo_ventas
     ]
   }
 }
