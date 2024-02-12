@@ -105,6 +105,53 @@ view: fact_ventas {
     sql: ${TABLE}.Monto_Conversion ;;
   }
 
+
+
+
+  dimension_group: created {
+    label: "Fecha"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      month_name,
+      year
+    ]
+    sql: CAST(${TABLE}.Fecha AS TIMESTAMP) ;;
+
+  }
+
+
+  filter: date_filter {
+    label: "Período"
+    description: "Use this date filter in combination with the timeframes dimension for dynamic date filtering"
+    type: date
+    # default_value: "6 weeks"
+    # este es un filtro de fecha
+
+  }
+
+
+  measure: total_cantidad {
+    type: sum
+    sql: ${TABLE}.Cantidad ;;
+  }
+
+  measure: total_monto {
+    type: sum
+    sql: ${TABLE}.Monto ;;
+  }
+
+  measure: total_monto_conversion {
+    type: sum
+    sql: ${TABLE}.Monto_Conversion ;;
+  }
+
+
   set: detail {
     fields: [
         id_fuente,
