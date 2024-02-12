@@ -33,7 +33,7 @@ explore: fact_ventas {
 
   join: dim_grupomateriales {
     type: left_outer
-    sql_on: ${dim_grupomateriales.codigo_grupo} = ${dim_grupomateriales.codigo_grupo} ;;
+    sql_on: ${dim_material.grupo_mat} = ${dim_grupomateriales.codigo_grupo} ;;
     relationship: many_to_one
   }
 

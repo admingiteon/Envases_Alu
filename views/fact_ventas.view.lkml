@@ -36,11 +36,11 @@ view: fact_ventas {
     sql: ${TABLE}.Tipo_Documento ;;
   }
 
-  dimension: fecha {
-    type: date
-    datatype: date
-    sql: ${TABLE}.Fecha ;;
-  }
+  # dimension: fecha {
+  #  type: date
+  # datatype: date
+  #  sql: ${TABLE}.Fecha ;;
+  #}
 
   dimension: canal_distribucion {
     type: string
@@ -109,6 +109,70 @@ view: fact_ventas {
 
 
 
+################################################################### FILTROS DE TIEMPO ######################################################
+
+  ##################Dias ############################
+
+  dimension: periodo_dia {
+    hidden: yes
+    type: yesno
+    sql:DATE_TRUNC(CAST(${created_date} AS DATE),DAY) =DATE_ADD( DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), DAY),INTERVAL -0 DAY);;
+  }
+
+  dimension: periodo_dia_anterior {
+    hidden: yes
+    type: yesno
+    sql:DATE_TRUNC(CAST(${created_date} AS DATE),DAY) =DATE_ADD(DATE_ADD( DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), DAY),INTERVAL -1 year),INTERVAL -0 day);;
+  }
+
+  ##################Dias ############################
+
+
+  ##################Mes ############################
+  dimension: is_current_period{
+    hidden: yes
+    type: yesno
+    sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY) >=DATE_ADD(DATE_ADD(LAST_DAY(CAST({% date_start date_filter %} AS DATE)), INTERVAL 1 DAY),INTERVAL -1 MONTH) AND DATE_TRUNC(CAST(${created_date} AS DATE),DAY) <= DATE_ADD((CAST({% date_start date_filter %} AS DATE)),INTERVAL -0 day)  ;;
+    #sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY)>=DATE_ADD(DATE_ADD(LAST_DAY(CAST({% date_start date_filter %} AS DATE)), INTERVAL 1 DAY),INTERVAL -1 MONTH)    ;;
+    #sql:DATE_TRUNC(CAST(${created_date} AS DATE),YEAR) =  DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR)  and DATE_TRUNC(CAST(${created_date} AS DATE),MONTH) = DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH) ;;
+    #LAST_DAY
+  }
+
+
+  dimension: is_previous_period{
+    hidden: yes
+    type: yesno
+    sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY) >=DATE_ADD(DATE_ADD(LAST_DAY(     DATE_ADD( CAST({% date_start date_filter %} AS DATE) ,INTERVAL -1 YEAR)        ), INTERVAL 1 DAY),INTERVAL -1 MONTH) AND DATE_TRUNC(CAST(${created_date} AS DATE),DAY) <= DATE_ADD(   DATE_ADD( CAST({% date_start date_filter %} AS DATE) ,INTERVAL -1 YEAR)    ,INTERVAL -0 day)  ;;
+    # sql:DATE_TRUNC(CAST(${created_date} AS DATE),YEAR) =  DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR) -1  and   DATE_TRUNC(CAST(${created_date} AS DATE),MONTH) = DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH) ;;
+
+  }
+  ##################Mes ############################
+
+
+  ##################Año ############################
+
+
+  dimension: is_current_year {
+    hidden: yes
+    type: yesno
+    sql: ${created_date} >= CAST(CONCAT(CAST(EXTRACT(YEAR FROM DATE ({% date_start date_filter %})) AS STRING),"-01-01")  AS DATE) and  ${created_date} <= DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), DAY)   ;;
+    #DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR);;  FECHA         DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH)
+  }
+
+  dimension: is_previous_year {
+    hidden: yes
+    type: yesno
+    sql: ${created_date} >= CAST(CONCAT(CAST(EXTRACT(YEAR FROM DATE ({% date_start date_filter %})) -1 AS STRING),"-01-01")  AS DATE) and  ${created_date} <= DATE_ADD(DATE_ADD( DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), DAY),INTERVAL -1 year),INTERVAL -0 day)   ;;
+    #DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR);;  FECHA         DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH)
+  }
+
+  ##################Año ############################
+
+################################################################### FILTROS DE TIEMPO ######################################################
+
+
+
+
 
   dimension_group: created {
     label: "Fecha"
@@ -151,6 +215,12 @@ view: fact_ventas {
 
   }
 
+  dimension: fecha {
+    label: "Date filter"
+    type: string
+    sql: CAST({% date_start date_filter %} AS DATE) ;;
+  }
+
 
   measure: total_cantidad {
     type: sum
@@ -166,6 +236,257 @@ view: fact_ventas {
     type: sum
     sql: ${TABLE}.Monto_Conversion ;;
   }
+
+
+################################################################### METRICA VACIOS ########################################################
+
+  measure: empty_value1 {
+    group_label: "seperador"
+    label: "Empty value 1"
+    type: string
+    sql: '';;
+  }
+
+  measure: empty_value2 {
+    group_label: "seperador"
+    label: "Empty value 2"
+    type: string
+    sql: '';;
+  }
+
+
+
+################################################################### CALCULOS DIARIOS ######################################################
+
+  measure: DAILY_SALES {
+    group_label: "Daily"
+    label: "DAILY SALES"
+    type: sum
+    sql: ${monto} ;;
+
+    filters: {
+      field: periodo_dia
+      value: "yes"
+    }
+
+   # drill_fields: [ Client,DAILY_SALES]
+
+    #value_format: "#,##0"
+    value_format: "$#,##0.00"
+  }
+
+
+#################################################################### INICIO CALCULOS MENSUALES ##################################################################
+
+
+  measure: CURRENT_QTY_MTD {
+    group_label: "Monthly"
+    label: "QTY MTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_current_period
+      value: "yes"
+    }
+    value_format: "#,##0"
+  }
+
+  measure: PREVIOUS_QTY_MTD {
+    group_label: "Monthly"
+    label: "PREVIOUS_QTY MTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_previous_period
+      value: "yes"
+    }
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_QTY_MTD {
+    group_label: "Monthly"
+      label: "% VS QTY MTD"
+    type: number
+    sql: (${CURRENT_QTY_MTD} - ${PREVIOUS_QTY_MTD}) / NULLIF(${PREVIOUS_QTY_MTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+    value_format: "0.00\%"
+
+  }
+
+  measure: CURRENT_AMOUNT_MTD {
+    group_label: "Monthly"
+    label: "AMOUNT MTD"
+    type: sum
+    sql: ${monto_conversion} ;;
+
+    filters: {
+      field: is_current_period
+      value: "yes"
+    }
+    value_format: "#,##0"
+  }
+
+  measure: PREVIOUS_AMOUNT_MTD {
+    group_label: "Monthly"
+    label: "PREVIOUS_AMOUNT MTD"
+    type: sum
+    sql: ${monto_conversion} ;;
+
+    filters: {
+      field: is_previous_period
+      value: "yes"
+    }
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_AMOUNT_MTD {
+    group_label: "Monthly"
+    label: "% VS AMOUNT MTD"
+    type: number
+    sql: (${CURRENT_AMOUNT_MTD} - ${PREVIOUS_AMOUNT_MTD}) / NULLIF(${PREVIOUS_AMOUNT_MTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+      value_format: "0.00\%"
+
+    }
+
+
+ #################################################################### FIN CALCULOS MENSUALES ##################################################################
+
+
+
+#################################################################### INICIO CALCULOS ANUALES ##################################################################
+
+  measure: CURRENT_QTY_YTD {
+     group_label: "Annual"
+    label: "QTY YTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_current_year
+      value: "yes"
+    }
+    value_format: "#,##0"
+  }
+
+  measure: PREVIOUS_QTY_YTD {
+     group_label: "Annual"
+    label: "PREVIOUS QTY YTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_previous_year
+      value: "yes"
+    }
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_QTY_YTD {
+     group_label: "Annual"
+    label: "% VS QTY YTD"
+    type: number
+    sql: (${CURRENT_QTY_YTD} - ${PREVIOUS_QTY_YTD}) / NULLIF(${PREVIOUS_QTY_YTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+      value_format: "0.00\%"
+
+    }
+
+    measure: CURRENT_AMOUNT_YTD {
+     group_label: "Annual"
+      label: "AMOUNT YTD"
+      type: sum
+      sql: ${monto_conversion} ;;
+
+      filters: {
+        field: is_current_year
+        value: "yes"
+      }
+      value_format: "#,##0"
+    }
+
+    measure: PREVIOUS_AMOUNT_YTD {
+      group_label: "Annual"
+      label: "PREVIOUS_AMOUNT YTD"
+      type: sum
+      sql: ${monto_conversion} ;;
+
+      filters: {
+        field: is_previous_year
+        value: "yes"
+      }
+      value_format: "#,##0"
+    }
+
+
+    measure: INDEX_AMOUNT_YTD {
+      group_label: "Annual"
+      label: "% VS AMOUNT YTD"
+      type: number
+      sql: (${CURRENT_AMOUNT_YTD} - ${PREVIOUS_AMOUNT_YTD}) / NULLIF(${PREVIOUS_AMOUNT_YTD},0)*100 ;;
+
+      html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+        value_format: "0.00\%"
+
+      }
+
+
+
+
+
+#################################################################### FIN CALCULOS ANUALES ##################################################################
+
+
+
+
 
 
   set: detail {
