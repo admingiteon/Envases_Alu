@@ -1,7 +1,9 @@
 
 view: fact_ventas {
   derived_table: {
-    sql: SELECT * FROM `envases-analytics-qa.RPT_ALU.Fact_Ventas` ;;
+    sql: SELECT *
+               ,DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY) ACTUALIZACION
+         FROM `envases-analytics-qa.RPT_ALU.Fact_Ventas` ;;
   }
 
   measure: count {
@@ -124,6 +126,20 @@ view: fact_ventas {
     sql: CAST(${TABLE}.Fecha AS TIMESTAMP) ;;
 
   }
+
+
+  dimension: actualizacion {
+    type: date
+    sql: ${TABLE}.ACTUALIZACION ;;
+  }
+
+  measure: ult_act {
+    type: date
+    label: "Fecha actualización"
+    sql: MAX(${actualizacion});;
+    convert_tz: no
+  }
+
 
 
   filter: date_filter {
