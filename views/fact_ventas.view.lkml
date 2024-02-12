@@ -6,6 +6,26 @@ view: fact_ventas {
          FROM `envases-analytics-qa.RPT_ALU.Fact_Ventas` ;;
   }
 
+
+  parameter: Tipo_moneda {
+
+    type: unquoted
+
+    allowed_value: {
+      label: "Moneda Nacional"
+      value: "MXN"
+    }
+
+
+    allowed_value: {
+      label: "Moneda Extranjera"
+      value: "ME"
+    }
+
+
+
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
@@ -83,6 +103,7 @@ view: fact_ventas {
   }
 
   dimension: moneda_transaccion {
+    label: "CURRENCY TYPE"
     type: string
     sql: ${TABLE}.Moneda_Transaccion ;;
   }
@@ -197,12 +218,15 @@ view: fact_ventas {
     sql: ${TABLE}.ACTUALIZACION ;;
   }
 
+
+
   measure: ult_act {
     type: date
-    label: "Fecha actualización"
+    label: "Update date"
     sql: MAX(${actualizacion});;
     convert_tz: no
   }
+
 
 
 
@@ -256,7 +280,16 @@ view: fact_ventas {
 
 
 
+
+
 ################################################################### CALCULOS DIARIOS ######################################################
+
+
+
+
+
+
+
 
   measure: DAILY_SALES {
     group_label: "Daily"
@@ -269,11 +302,31 @@ view: fact_ventas {
       value: "yes"
     }
 
+
+
    # drill_fields: [ Client,DAILY_SALES]
 
     #value_format: "#,##0"
     value_format: "$#,##0.00"
   }
+
+  measure: promedio_tipo_cambio {
+    group_label: "Daily"
+    label: "EXCHANGE RATE"
+    type: average
+    sql: ${tipo_cambio} ;;
+
+    filters: {
+      field: periodo_dia
+      value: "yes"
+    }
+
+    # drill_fields: [ Client,DAILY_SALES]
+
+    #value_format: "#,##0"
+    value_format: "$#,##0.00"
+  }
+
 
 
 #################################################################### INICIO CALCULOS MENSUALES ##################################################################
@@ -289,6 +342,10 @@ view: fact_ventas {
       field: is_current_period
       value: "yes"
     }
+
+    drill_fields: [fecha,CURRENT_QTY_MTD]
+
+
     value_format: "#,##0"
   }
 
@@ -302,6 +359,8 @@ view: fact_ventas {
       field: is_previous_period
       value: "yes"
     }
+
+
     value_format: "#,##0"
   }
 
@@ -331,7 +390,14 @@ view: fact_ventas {
     group_label: "Monthly"
     label: "AMOUNT MTD"
     type: sum
-    sql: ${monto_conversion} ;;
+    sql:
+
+      {% if Tipo_moneda._parameter_value == 'MXN' %}
+        ${monto_conversion}
+      {% else  %}
+       ${monto}
+       {% endif %};;
+
 
     filters: {
       field: is_current_period
@@ -344,7 +410,11 @@ view: fact_ventas {
     group_label: "Monthly"
     label: "PREVIOUS_AMOUNT MTD"
     type: sum
-    sql: ${monto_conversion} ;;
+    sql:  {% if Tipo_moneda._parameter_value == 'MXN' %}
+        ${monto_conversion}
+      {% else  %}
+       ${monto}
+       {% endif %};;
 
     filters: {
       field: is_previous_period
@@ -434,7 +504,14 @@ view: fact_ventas {
      group_label: "Annual"
       label: "AMOUNT YTD"
       type: sum
-      sql: ${monto_conversion} ;;
+      sql:
+      {% if Tipo_moneda._parameter_value == 'MXN' %}
+        ${monto_conversion}
+      {% else  %}
+       ${monto}
+       {% endif %}
+
+      ;;
 
       filters: {
         field: is_current_year
@@ -447,7 +524,13 @@ view: fact_ventas {
       group_label: "Annual"
       label: "PREVIOUS_AMOUNT YTD"
       type: sum
-      sql: ${monto_conversion} ;;
+      sql:
+
+      {% if Tipo_moneda._parameter_value == 'MXN' %}
+        ${monto_conversion}
+      {% else  %}
+       ${monto}
+       {% endif %} ;;
 
       filters: {
         field: is_previous_year
