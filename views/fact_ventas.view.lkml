@@ -302,7 +302,7 @@ view: fact_ventas {
       value: "yes"
     }
 
-
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, DAILY_SALES]
 
    # drill_fields: [ Client,DAILY_SALES]
 
@@ -321,7 +321,7 @@ view: fact_ventas {
       value: "yes"
     }
 
-    # drill_fields: [ Client,DAILY_SALES]
+
 
     #value_format: "#,##0"
     value_format: "$#,##0.00"
@@ -343,7 +343,7 @@ view: fact_ventas {
       value: "yes"
     }
 
-    drill_fields: [fecha,CURRENT_QTY_MTD]
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, CURRENT_QTY_MTD]
 
 
     value_format: "#,##0"
@@ -382,6 +382,9 @@ view: fact_ventas {
     {{rendered_value}}
     {% endif %} ;;
 
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,CURRENT_QTY_MTD,PREVIOUS_QTY_MTD, INDEX_QTY_MTD]
+
     value_format: "0.00\%"
 
   }
@@ -403,6 +406,9 @@ view: fact_ventas {
       field: is_current_period
       value: "yes"
     }
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, CURRENT_AMOUNT_MTD]
+
     value_format: "#,##0"
   }
 
@@ -441,6 +447,9 @@ view: fact_ventas {
     {{rendered_value}}
     {% endif %} ;;
 
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,CURRENT_AMOUNT_MTD,PREVIOUS_AMOUNT_MTD, INDEX_AMOUNT_MTD]
+
       value_format: "0.00\%"
 
     }
@@ -462,6 +471,9 @@ view: fact_ventas {
       field: is_current_year
       value: "yes"
     }
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, CURRENT_QTY_YTD]
+
     value_format: "#,##0"
   }
 
@@ -496,6 +508,9 @@ view: fact_ventas {
     {{rendered_value}}
     {% endif %} ;;
 
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,CURRENT_QTY_YTD,PREVIOUS_QTY_YTD, INDEX_QTY_YTD]
+
       value_format: "0.00\%"
 
     }
@@ -512,6 +527,9 @@ view: fact_ventas {
        {% endif %}
 
       ;;
+
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, CURRENT_AMOUNT_YTD]
 
       filters: {
         field: is_current_year
@@ -557,6 +575,8 @@ view: fact_ventas {
           {{rendered_value}}
           {% endif %} ;;
 
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,CURRENT_AMOUNT_YTD,PREVIOUS_AMOUNT_YTD, INDEX_AMOUNT_YTD]
         value_format: "0.00\%"
 
       }

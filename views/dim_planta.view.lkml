@@ -20,6 +20,7 @@ view: dim_planta {
   }
 
   dimension: nombre_planta {
+    label: "Planta"
     type: string
     sql: ${TABLE}.Nombre_Planta ;;
   }

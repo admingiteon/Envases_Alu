@@ -20,6 +20,7 @@ view: dim_grupoclientes {
   }
 
   dimension: descripcion {
+    label: "Cliente"
     type: string
     sql: ${TABLE}.Descripcion ;;
   }
