@@ -40,7 +40,7 @@ explore: fact_ventas {
 
   join: dim_planta {
     type: left_outer
-    sql_on: ${fact_ventas.planta} = ${dim_planta.id_planta} and and ${fact_ventas.id_fuente} = ${dim_planta.id_fuente} ;;
+    sql_on: ${fact_ventas.planta} = ${dim_planta.id_planta} and  ${fact_ventas.id_fuente} = ${dim_planta.id_fuente} ;;
     relationship: many_to_one
   }
 
