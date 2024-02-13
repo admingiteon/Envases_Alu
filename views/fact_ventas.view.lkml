@@ -105,7 +105,7 @@ view: fact_ventas {
   dimension: moneda_transaccion {
     label: "CURRENCY TYPE"
     type: string
-    sql: ${TABLE}.Moneda_Transaccion / 1000 ;;
+    sql: ${TABLE}.Moneda_Transaccion ;;
   }
 
   dimension: monto {
@@ -125,7 +125,7 @@ view: fact_ventas {
 
   dimension: monto_conversion {
     type: number
-    sql: ${TABLE}.Monto_Conversion ;;
+    sql: ${TABLE}.Monto_Conversion / 1000 ;;
   }
 
 
