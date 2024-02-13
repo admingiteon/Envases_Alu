@@ -99,18 +99,18 @@ view: fact_ventas {
 
   dimension: cantidad {
     type: number
-    sql: ${TABLE}.Cantidad ;;
+    sql: ${TABLE}.Cantidad/ 1000 ;;
   }
 
   dimension: moneda_transaccion {
     label: "CURRENCY TYPE"
     type: string
-    sql: ${TABLE}.Moneda_Transaccion ;;
+    sql: ${TABLE}.Moneda_Transaccion / 1000 ;;
   }
 
   dimension: monto {
     type: number
-    sql: ${TABLE}.Monto ;;
+    sql: ${TABLE}.Monto / 1000 ;;
   }
 
   dimension: moneda_conversion {
