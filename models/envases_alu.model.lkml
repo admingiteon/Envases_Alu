@@ -14,33 +14,33 @@ explore: fact_ventas {
 
   join: dim_cliente {
     type: left_outer
-    sql_on: ${fact_ventas.cliente} = ${dim_cliente.codigo_cliente} and ${fact_ventas.id_fuente} and ${dim_cliente.id_fuente} ;;
+    sql_on: ${fact_ventas.cliente} = ${dim_cliente.codigo_cliente} and ${fact_ventas.id_fuente} = ${dim_cliente.id_fuente} ;;
     relationship: many_to_one
   }
 
   join: dim_grupoclientes {
     type: left_outer
-    sql_on: ${dim_cliente.grupo_ventas} = ${dim_grupoclientes.codigo_grupo} and ${fact_ventas.id_fuente} and ${dim_grupoclientes.id_fuente} ;;
+    sql_on: ${dim_cliente.grupo_ventas} = ${dim_grupoclientes.codigo_grupo} and ${fact_ventas.id_fuente} = ${dim_grupoclientes.id_fuente} ;;
     relationship: many_to_one
   }
 
 
   join: dim_material {
     type: left_outer
-    sql_on: ${fact_ventas.material} = ${dim_material.material} and ${fact_ventas.id_fuente} and ${dim_material.id_fuente}  ;;
+    sql_on: ${fact_ventas.material} = ${dim_material.material} and ${fact_ventas.id_fuente} = ${dim_material.id_fuente}  ;;
     relationship: many_to_one
   }
 
   join: dim_grupomateriales {
     type: left_outer
-    sql_on: ${dim_material.grupo_mat} = ${dim_grupomateriales.codigo_grupo} and ${fact_ventas.id_fuente} and ${dim_grupomateriales.id_fuente} ;;
+    sql_on: ${dim_material.grupo_mat} = ${dim_grupomateriales.codigo_grupo} and ${fact_ventas.id_fuente} = ${dim_grupomateriales.id_fuente} ;;
     relationship: many_to_one
   }
 
 
   join: dim_planta {
     type: left_outer
-    sql_on: ${fact_ventas.planta} = ${dim_planta.id_planta} ;;
+    sql_on: ${fact_ventas.planta} = ${dim_planta.id_planta} and and ${fact_ventas.id_fuente} = ${dim_planta.id_fuente} ;;
     relationship: many_to_one
   }
 
