@@ -336,8 +336,8 @@ view: fact_ventas {
   }
 
   measure: promedio_tipo_cambio {
-    group_label: "Daily"
-    label: "EXCHANGE RATE"
+    group_label: "Diario"
+    label: "TIPO DE CAMBIO"
     type: average
     sql: ${tipo_cambio} ;;
 
