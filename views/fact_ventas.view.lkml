@@ -495,7 +495,7 @@ view: fact_ventas {
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_MTD]
 
-    value_format: "#,##0"
+    value_format: "$#,##0.00"
   }
 
   measure: LY_Monto_MTD {
@@ -508,7 +508,7 @@ view: fact_ventas {
       field: is_previous_period
       value: "yes"
     }
-    value_format: "#,##0"
+    value_format: "$#,##0.00"
   }
 
 
@@ -668,7 +668,7 @@ view: fact_ventas {
       field: is_current_year
       value: "yes"
     }
-    value_format: "#,##0"
+    value_format: "$#,##0.00"
   }
 
   measure: LY_Monto_YTD {
@@ -681,7 +681,7 @@ view: fact_ventas {
       field: is_previous_year
       value: "yes"
     }
-    value_format: "#,##0"
+    value_format: "$#,##0.00"
   }
 
 
