@@ -6,123 +6,133 @@ view: fact_ventas {
          FROM `envases-analytics-qa.RPT_ALU.Fact_Ventas` ;;
   }
 
-
+#############FILTROS Y PARAMETROS
   parameter: Tipo_moneda {
-
     type: unquoted
-
     allowed_value: {
       label: "Moneda Nacional"
       value: "MXN"
     }
-
-
     allowed_value: {
       label: "Moneda Extranjera"
       value: "ME"
     }
+  }
 
-
+  filter: date_filter {
+    label: "Período"
+    description: "Use this date filter in combination with the timeframes dimension for dynamic date filtering"
+    type: date
+    # default_value: "6 weeks"
+    # este es un filtro de fecha
 
   }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
-
+################DIMENSIONES
   dimension: id_fuente {
+    label: "Sistema Fuente"
     type: string
     sql: ${TABLE}.ID_Fuente ;;
   }
 
   dimension: documento {
+    hidden: yes
     type: string
     sql: ${TABLE}.Documento ;;
   }
 
   dimension: posicion {
+    hidden: yes
     type: string
     sql: ${TABLE}.Posicion ;;
   }
 
   dimension: tipo_transaccion {
+    label: "Tipo Transaccion"
     type: string
     sql: ${TABLE}.Tipo_Transaccion ;;
   }
 
   dimension: tipo_documento {
+    hidden: yes
     type: string
     sql: ${TABLE}.Tipo_Documento ;;
   }
 
-  # dimension: fecha {
-  #  type: date
-  # datatype: date
-  #  sql: ${TABLE}.Fecha ;;
-  #}
-
   dimension: canal_distribucion {
+    label: "Canal Distribución"
     type: string
     sql: ${TABLE}.Canal_Distribucion ;;
   }
 
   dimension: material {
+    hidden: yes
     type: string
     sql: ${TABLE}.Material ;;
   }
 
   dimension: planta {
+    hidden: yes
     type: string
     sql: ${TABLE}.Planta ;;
   }
 
   dimension: cliente {
+    hidden: yes
     type: string
     sql: ${TABLE}.Cliente ;;
   }
 
   dimension: destinatario {
+    hidden: yes
     type: string
     sql: ${TABLE}.Destinatario ;;
   }
 
   dimension: organizacion_ventas {
+    label: "Org. Ventas"
     type: string
     sql: ${TABLE}.Organizacion_Ventas ;;
   }
 
   dimension: unidad_base {
+    label: "Unidad Medida"
     type: string
     sql: ${TABLE}.Unidad_Base ;;
   }
 
   dimension: cantidad {
+    hidden: yes
     type: number
     sql: ${TABLE}.Cantidad/ 1000 ;;
   }
 
   dimension: moneda_transaccion {
+    label: "Moneda Origen"
     type: string
     sql: ${TABLE}.Moneda_Transaccion ;;
   }
 
   dimension: monto {
+    hidden: yes
     type: number
     sql: ${TABLE}.Monto / 1000 ;;
   }
 
   dimension: moneda_conversion {
+    hidden: yes
     type: string
     sql: ${TABLE}.Moneda_Conversion ;;
   }
 
   dimension: tipo_cambio {
+    hidden: yes
     type: number
     sql: ${TABLE}.Tipo_Cambio ;;
   }
 
   dimension: monto_conversion {
+    hidden: yes
     type: number
     sql: ${TABLE}.Monto_Conversion / 1000 ;;
   }
@@ -229,14 +239,6 @@ view: fact_ventas {
 
 
 
-  filter: date_filter {
-    label: "Período"
-    description: "Use this date filter in combination with the timeframes dimension for dynamic date filtering"
-    type: date
-    # default_value: "6 weeks"
-    # este es un filtro de fecha
-
-  }
 
   dimension: fecha {
     label: "Date filter"
@@ -324,7 +326,7 @@ view: fact_ventas {
     group_label: "Diario"
     label: "Monto Conversion Diario"
     type: sum
-    sql: ${monto_conversion} ;;
+    sql: ${monto_conversion};;
 
     filters: {
       field: periodo_dia
@@ -395,7 +397,8 @@ view: fact_ventas {
     group_label: "Mensual-QTY"
       label: "% VS QTY MTD"
     type: number
-    sql: (${QTY_MTD} - ${LY_QTY_MTD}) / NULLIF(${LY_QTY_MTD},0)*100 ;;
+    #sql: (${QTY_MTD} - ${LY_QTY_MTD}) / CASE WHEN ${LY_QTY_MTD} = 0,0)*100 ;;
+    sql: CASE WHEN ${LY_QTY_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_MTD}) / COALESCE (${LY_QTY_MTD}, 0)*100  ;;
 
     html:
     {% if value > 0 %}
@@ -433,7 +436,7 @@ view: fact_ventas {
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_Conversion_MTD]
 
-    value_format: "#,##0"
+    value_format: "$#,##0.00"
   }
 
   measure: LY_Monto_Conversion_MTD {
@@ -446,7 +449,7 @@ view: fact_ventas {
       field: is_previous_period
       value: "yes"
     }
-    value_format: "#,##0"
+    value_format: "$#,##0.00"
   }
 
 
@@ -454,7 +457,7 @@ view: fact_ventas {
      group_label: "Mensual-Monto Conversion"
     label: "% VS Monto Conversion MTD"
     type: number
-    sql: (${Monto_Conversion_MTD} - l ) / NULLIF(${LY_Monto_Conversion_MTD},0)*100 ;;
+    sql: (${Monto_Conversion_MTD} - ${LY_Monto_Conversion_MTD} ) / NULLIF(${LY_Monto_Conversion_MTD},0)*100 ;;
 
     html:
     {% if value > 0 %}
