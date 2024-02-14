@@ -322,9 +322,9 @@ view: fact_ventas {
 
   measure: Monto_conversion_diario {
     group_label: "Diario"
-    label: "Monto Diario"
+    label: "Monto Conversion Diario"
     type: sum
-    sql: ${moneda_conversion} ;;
+    sql: ${monto_conversion} ;;
 
     filters: {
       field: periodo_dia
