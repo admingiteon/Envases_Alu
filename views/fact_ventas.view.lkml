@@ -284,15 +284,29 @@ view: fact_ventas {
 ################################################################### CALCULOS DIARIOS ######################################################
 
 
+  measure: QTY_diario {
+    group_label: "Diario"
+    label: "QTY Diario"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: periodo_dia
+      value: "yes"
+    }
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_conversion_diario]
+    value_format: "$#,##0.00"
+  }
 
 
 
 
 
 
-  measure: DAILY_SALES {
-    group_label: "Daily"
-    label: "DAILY SALES"
+  measure: Monto_Diario {
+    group_label: "Diario"
+    label: "Monto Diario"
     type: sum
     sql: ${monto} ;;
 
@@ -301,11 +315,23 @@ view: fact_ventas {
       value: "yes"
     }
 
-    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, DAILY_SALES]
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_Diario]
 
-   # drill_fields: [ Client,DAILY_SALES]
+    value_format: "$#,##0.00"
+  }
 
-    #value_format: "#,##0"
+  measure: Monto_conversion_diario {
+    group_label: "Diario"
+    label: "Monto Diario"
+    type: sum
+    sql: ${moneda_conversion} ;;
+
+    filters: {
+      field: periodo_dia
+      value: "yes"
+    }
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_conversion_diario]
     value_format: "$#,##0.00"
   }
 
