@@ -44,16 +44,8 @@ explore: fact_ventas {
     relationship: many_to_one
   }
 
-
-
+  access_filter: {
+    field: id_fuente
+    user_attribute: sist_fuente
+  }
 }
-
-
-
-
-explore: dim_cliente {}
-explore: dim_divisas {}
-explore: dim_grupoclientes {}
-explore: dim_material {}
-explore: dim_planta {}
-explore: dim_grupomateriales {}
