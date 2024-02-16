@@ -23,12 +23,19 @@ view: fact_ventas {
     label: "Período"
     description: "Use this date filter in combination with the timeframes dimension for dynamic date filtering"
     type: date
+    default_value: "[hoy]"
     # default_value: "6 weeks"
     # este es un filtro de fecha
 
   }
 
 ################DIMENSIONES
+
+  dimension: hoy {
+    type: date
+    sql: current_date();;
+    hidden: yes
+  }
   dimension: id_fuente {
     label: "Sistema Fuente"
     type: string
