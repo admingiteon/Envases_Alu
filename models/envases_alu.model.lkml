@@ -45,7 +45,7 @@ explore: fact_ventas {
   }
 
   access_filter: {
-    field: id_fuente
+    field: fact_ventas.id_fuente
     user_attribute: sist_fuente
   }
 }
