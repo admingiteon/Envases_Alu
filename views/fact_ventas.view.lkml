@@ -126,22 +126,22 @@ view: fact_ventas {
     sql: ${TABLE}.Monto / 1000 ;;
   }
 
-  dimension: moneda_conversion {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.Moneda_Conversion ;;
-  }
+  #dimension: moneda_conversion {
+  #  hidden: yes
+  #  type: string
+  #  sql: ${TABLE}.Moneda_Conversion_MXN ;;
+  #}
 
   dimension: tipo_cambio {
     hidden: yes
     type: number
-    sql: ${TABLE}.Tipo_Cambio ;;
+    sql: ${TABLE}.Tipo_Cambio_MXN ;;
   }
 
   dimension: monto_conversion {
     hidden: yes
     type: number
-    sql: ${TABLE}.Monto_Conversion / 1000 ;;
+    sql: ${TABLE}.Monto_Conversion_MXN / 1000 ;;
   }
 
 
@@ -748,7 +748,6 @@ view: fact_ventas {
   cantidad,
   moneda_transaccion,
   monto,
-  moneda_conversion,
   tipo_cambio,
   monto_conversion
     ]
