@@ -205,6 +205,53 @@ view: fact_ventas {
 
   ##################Año ############################
 
+
+  ################## 3 Mes  ############################
+  dimension: is_current_quarter{
+    hidden: yes
+    type: yesno
+    sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY) >=DATE_ADD(DATE_ADD(LAST_DAY(CAST({% date_start date_filter %} AS DATE)), INTERVAL 1 DAY),INTERVAL -3 MONTH) AND DATE_TRUNC(CAST(${created_date} AS DATE),DAY) <= DATE_ADD((CAST({% date_start date_filter %} AS DATE)),INTERVAL -0 day)  ;;
+    #sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY)>=DATE_ADD(DATE_ADD(LAST_DAY(CAST({% date_start date_filter %} AS DATE)), INTERVAL 1 DAY),INTERVAL -1 MONTH)    ;;
+    #sql:DATE_TRUNC(CAST(${created_date} AS DATE),YEAR) =  DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR)  and DATE_TRUNC(CAST(${created_date} AS DATE),MONTH) = DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH) ;;
+    #LAST_DAY
+  }
+
+
+  dimension: is_previous_quarter{
+    hidden: yes
+    type: yesno
+    sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY) >=DATE_ADD(DATE_ADD(LAST_DAY(     DATE_ADD( CAST({% date_start date_filter %} AS DATE) ,INTERVAL -1 YEAR)        ), INTERVAL 1 DAY),INTERVAL -3 MONTH) AND DATE_TRUNC(CAST(${created_date} AS DATE),DAY) <= DATE_ADD(   DATE_ADD( CAST({% date_start date_filter %} AS DATE) ,INTERVAL -1 YEAR)    ,INTERVAL -0 day)  ;;
+    # sql:DATE_TRUNC(CAST(${created_date} AS DATE),YEAR) =  DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR) -1  and   DATE_TRUNC(CAST(${created_date} AS DATE),MONTH) = DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH) ;;
+
+  }
+  ##################Mes ############################
+
+
+
+  ################## 6 Mes ############################
+  dimension: is_current_semester{
+    hidden: yes
+    type: yesno
+    sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY) >=DATE_ADD(DATE_ADD(LAST_DAY(CAST({% date_start date_filter %} AS DATE)), INTERVAL 1 DAY),INTERVAL -6 MONTH) AND DATE_TRUNC(CAST(${created_date} AS DATE),DAY) <= DATE_ADD((CAST({% date_start date_filter %} AS DATE)),INTERVAL -0 day)  ;;
+    #sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY)>=DATE_ADD(DATE_ADD(LAST_DAY(CAST({% date_start date_filter %} AS DATE)), INTERVAL 1 DAY),INTERVAL -1 MONTH)    ;;
+    #sql:DATE_TRUNC(CAST(${created_date} AS DATE),YEAR) =  DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR)  and DATE_TRUNC(CAST(${created_date} AS DATE),MONTH) = DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH) ;;
+    #LAST_DAY
+  }
+
+
+  dimension: is_previous_semester{
+    hidden: yes
+    type: yesno
+    sql: DATE_TRUNC(CAST(${created_date} AS DATE),DAY) >=DATE_ADD(DATE_ADD(LAST_DAY(     DATE_ADD( CAST({% date_start date_filter %} AS DATE) ,INTERVAL -6 YEAR)        ), INTERVAL 1 DAY),INTERVAL -1 MONTH) AND DATE_TRUNC(CAST(${created_date} AS DATE),DAY) <= DATE_ADD(   DATE_ADD( CAST({% date_start date_filter %} AS DATE) ,INTERVAL -1 YEAR)    ,INTERVAL -0 day)  ;;
+    # sql:DATE_TRUNC(CAST(${created_date} AS DATE),YEAR) =  DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), YEAR) -1  and   DATE_TRUNC(CAST(${created_date} AS DATE),MONTH) = DATE_TRUNC(CAST({% date_start date_filter %} AS DATE), MONTH) ;;
+
+  }
+  ##################Mes ############################
+
+
+
+
+
 ################################################################### FILTROS DE TIEMPO ######################################################
 
 
@@ -304,6 +351,8 @@ view: fact_ventas {
       value: "yes"
     }
 
+    filters: [tipo_transaccion: "Venta"]
+
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_conversion_diario]
     value_format: "$#,##0.00"
   }
@@ -324,10 +373,36 @@ view: fact_ventas {
       value: "yes"
     }
 
+    filters: [tipo_transaccion: "Venta"]
+
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_Diario]
 
     value_format: "$#,##0.00"
   }
+
+
+  measure: Ptto_Diario {
+    group_label: "Ptto Diario"
+    label: "Ptto Diario"
+    type: sum
+    sql: ${monto} ;;
+
+    filters: {
+      field: periodo_dia
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_Diario]
+
+    value_format: "$#,##0.00"
+  }
+
+
+
+
+
 
   measure: Monto_conversion_diario {
     group_label: "Diario"
@@ -339,6 +414,26 @@ view: fact_ventas {
       field: periodo_dia
       value: "yes"
     }
+
+    filters: [tipo_transaccion: "Venta"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_conversion_diario]
+    value_format: "$#,##0.00"
+  }
+
+
+  measure: Ptto_conversion_diario {
+    group_label: "Ptto Diario"
+    label: "Ptto Conversion Diario"
+    type: sum
+    sql: ${monto_conversion};;
+
+    filters: {
+      field: periodo_dia
+      value: "yes"
+    }
+
+   filters: [tipo_transaccion: "Presupuesto"]
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_conversion_diario]
     value_format: "$#,##0.00"
@@ -355,11 +450,11 @@ view: fact_ventas {
       value: "yes"
     }
 
-
-
-    #value_format: "#,##0"
     value_format: "$#,##0.00"
   }
+
+
+
 
 
 
@@ -380,6 +475,8 @@ view: fact_ventas {
       value: "yes"
     }
 
+    filters: [tipo_transaccion: "Venta"]
+
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_MTD]
     value_format: "#,##0"
   }
@@ -395,6 +492,7 @@ view: fact_ventas {
       value: "yes"
     }
 
+    filters: [tipo_transaccion: "Venta"]
 
     value_format: "#,##0"
   }
@@ -426,6 +524,69 @@ view: fact_ventas {
   }
 
 
+  measure: QTY_Ptto_MTD {
+    group_label: "Mensual-QTY-Ptto"
+    label: "QTY Ptto MTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_current_period
+      value: "yes"
+    }
+
+   filters: [tipo_transaccion: "Presupuesto"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_Ptto_MTD]
+    value_format: "#,##0"
+  }
+
+  measure: LY_QTY_Ptto_MTD {
+    group_label: "Mensual-QTY-Ptto"
+    label: "LY QTY Ptto MTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_previous_period
+      value: "yes"
+    }
+
+   filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_QTY_Ptto_MTD {
+    group_label: "Mensual-QTY-Ptto"
+    label: "% VS QTY Ptto MTD"
+    type: number
+    #sql: (${QTY_MTD} - ${LY_QTY_MTD}) / CASE WHEN ${LY_QTY_MTD} = 0,0)*100 ;;
+    sql: CASE WHEN ${QTY_Ptto_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_Ptto_MTD}) / COALESCE (${LY_QTY_Ptto_MTD}, 0)*100  ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_Ptto_MTD,LY_QTY_Ptto_MTD, INDEX_QTY_Ptto_MTD]
+
+    value_format: "0.00\%"
+
+  }
+
+
+
+
+
   #### FIN CANTIDAD ####
 
   #### INICIO MONTO CONVERSION ####
@@ -441,10 +602,13 @@ view: fact_ventas {
       value: "yes"
     }
 
+    filters: [tipo_transaccion: "Venta"]
+
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_Conversion_MTD]
 
     value_format: "$#,##0.00"
   }
+
 
   measure: LY_Monto_Conversion_MTD {
      group_label: "Mensual-Monto Conversion"
@@ -456,6 +620,9 @@ view: fact_ventas {
       field: is_previous_period
       value: "yes"
     }
+
+    filters: [tipo_transaccion: "Venta"]
+
     value_format: "$#,##0.00"
   }
 
@@ -485,6 +652,71 @@ view: fact_ventas {
     }
 
 
+  measure: Ptto_Conversion_MTD {
+    group_label: "Mensual-Ptto Conversion"
+    label: "Ptto Conversion MTD"
+    type: sum
+    sql: ${monto_conversion};;
+
+    filters: {
+      field: is_current_period
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_Conversion_MTD]
+
+    value_format: "$#,##0.00"
+  }
+
+
+  measure: LY_Ptto_Conversion_MTD {
+    group_label: "Mensual-Ptto Conversion"
+    label: "LY Ptto Conversion MTD"
+    type: sum
+    sql:  ${monto_conversion} ;;
+
+    filters: {
+      field: is_previous_period
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "$#,##0.00"
+  }
+
+
+
+  measure: INDEX_Ptto_Conversion_MTD {
+    group_label: "Mensual-Ptto Conversion"
+    label: "% VS Ptto Conversion MTD"
+    type: number
+    sql: (${Ptto_Conversion_MTD} - ${LY_Ptto_Conversion_MTD} ) / NULLIF(${LY_Ptto_Conversion_MTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_Conversion_MTD,LY_Ptto_Conversion_MTD, INDEX_Ptto_Conversion_MTD]
+
+    value_format: "0.00\%"
+
+  }
+
+
+
+
+
   #### FIN  MONTO CONVERSION ####
 
   #### INICIO  MONTO  ####
@@ -499,6 +731,8 @@ view: fact_ventas {
       field: is_current_period
       value: "yes"
     }
+
+    filters: [tipo_transaccion: "Venta"]
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_MTD]
 
@@ -515,6 +749,9 @@ view: fact_ventas {
       field: is_previous_period
       value: "yes"
     }
+
+    filters: [tipo_transaccion: "Venta"]
+
     value_format: "$#,##0.00"
   }
 
@@ -543,6 +780,66 @@ view: fact_ventas {
 
   }
 
+  measure: Ptto_MTD {
+    group_label: "Mensual-Ptto"
+    label: "Ptto MTD"
+    type: sum
+    sql:${monto} ;;
+
+    filters: {
+      field: is_current_period
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_MTD]
+
+    value_format: "$#,##0.00"
+  }
+
+  measure: LY_Ptto_MTD {
+    group_label: "Mensual-Ptto"
+    label: "LY Ptto MTD"
+    type: sum
+    sql:  ${monto} ;;
+
+    filters: {
+      field: is_previous_period
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "$#,##0.00"
+  }
+
+
+  measure: INDEX_Ptto_MTD {
+    group_label: "Mensual-Ptto"
+    label: "% VS Ptto MTD"
+    type: number
+    sql: (${Ptto_MTD} - ${LY_Ptto_MTD}) / NULLIF(${LY_Ptto_MTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_MTD,LY_Ptto_MTD, INDEX_Ptto_MTD]
+
+    value_format: "0.00\%"
+
+  }
+
+
 
 
 
@@ -566,6 +863,8 @@ view: fact_ventas {
       value: "yes"
     }
 
+    filters: [tipo_transaccion: "Venta"]
+
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_YTD]
 
     value_format: "#,##0"
@@ -581,6 +880,9 @@ view: fact_ventas {
       field: is_previous_year
       value: "yes"
     }
+
+    filters: [tipo_transaccion: "Venta"]
+
     value_format: "#,##0"
   }
 
@@ -609,6 +911,69 @@ view: fact_ventas {
 
     }
 
+
+  measure: QTY_Ptto_YTD {
+    group_label: "Anual-QTY-Ptto"
+    label: "QTY Ptto YTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_current_year
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_Ptto_YTD]
+
+    value_format: "#,##0"
+  }
+
+  measure: LY_QTY_Ptto_YTD {
+    group_label: "Anual-QTY-Ptto"
+    label: "LY QTY Ptto YTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_previous_year
+      value: "yes"
+    }
+
+   filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_QTY_Ptto_YTD {
+    group_label: "Anual-QTY-Ptto"
+    label: "% VS QTY Ptto YTD"
+    type: number
+    sql: (${QTY_Ptto_YTD} - ${LY_QTY_Ptto_YTD}) / NULLIF(${LY_QTY_Ptto_YTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_Ptto_YTD,LY_QTY_Ptto_YTD, INDEX_QTY_Ptto_YTD]
+
+    value_format: "0.00\%"
+
+  }
+
+
+
+
     measure: Monto_Conversion_YTD {
       group_label: "Anual-Monto_Conversion"
       label: "Monto Conversion YTD"
@@ -622,6 +987,9 @@ view: fact_ventas {
         field: is_current_year
         value: "yes"
       }
+
+      filters: [tipo_transaccion: "Venta"]
+
       value_format: "#,##0"
     }
 
@@ -635,6 +1003,9 @@ view: fact_ventas {
         field: is_previous_year
         value: "yes"
       }
+
+      filters: [tipo_transaccion: "Venta"]
+
       value_format: "#,##0"
     }
 
@@ -662,6 +1033,68 @@ view: fact_ventas {
 
       }
 
+  measure: Ptto_Conversion_YTD {
+    group_label: "Anual-Ptto_Conversion"
+    label: "Ptto Conversion YTD"
+    type: sum
+    sql:  ${monto_conversion} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_Conversion_YTD]
+
+    filters: {
+      field: is_current_year
+      value: "yes"
+    }
+
+   filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "#,##0"
+  }
+
+  measure: LY_Ptto_Conversion_YTD {
+    group_label: "Anual-Ptto_Conversion"
+    label: "LY Ptto Conversion YTD"
+    type: sum
+    sql: ${monto_conversion} ;;
+
+    filters: {
+      field: is_previous_year
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_Ptto_Conversion_YTD {
+    group_label: "Anual-Ptto_Conversion"
+    label: "% VS Ptto Conversion YTD"
+    type: number
+    sql: (${Ptto_Conversion_YTD} - ${LY_Ptto_Conversion_YTD}) / NULLIF(${LY_Ptto_Conversion_YTD},0)*100 ;;
+
+    html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_Conversion_YTD,LY_Ptto_Conversion_YTD, INDEX_Ptto_Conversion_YTD]
+    value_format: "0.00\%"
+
+  }
+
+
+
+
    measure: Monto_YTD {
     group_label: "Anual-Monto"
     label: "Monto YTD"
@@ -675,6 +1108,9 @@ view: fact_ventas {
       field: is_current_year
       value: "yes"
     }
+
+    filters: [tipo_transaccion: "Venta"]
+
     value_format: "$#,##0.00"
   }
 
@@ -688,6 +1124,9 @@ view: fact_ventas {
       field: is_previous_year
       value: "yes"
     }
+
+    filters: [tipo_transaccion: "Venta"]
+
     value_format: "$#,##0.00"
   }
 
@@ -716,6 +1155,66 @@ view: fact_ventas {
   }
 
 
+  measure: Ptto_YTD {
+    group_label: "Anual-Ptto"
+    label: "Ptto YTD"
+    type: sum
+    sql:  ${monto} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_YTD]
+
+    filters: {
+      field: is_current_year
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "$#,##0.00"
+  }
+
+  measure: LY_Ptto_YTD {
+    group_label: "Anual-Ptto"
+    label: "LY Ptto YTD"
+    type: sum
+    sql: ${monto} ;;
+
+    filters: {
+      field: is_previous_year
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "$#,##0.00"
+  }
+
+
+  measure: INDEX_Ptto_YTD {
+    group_label: "Anual-Ptto"
+    label: "% VS Ptto  YTD"
+    type: number
+    sql: (${Ptto_YTD} - ${LY_Ptto_YTD}) / NULLIF(${LY_Ptto_YTD},0)*100 ;;
+
+    html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_YTD,LY_Ptto_YTD, INDEX_Ptto_YTD]
+    value_format: "0.00\%"
+
+  }
+
+
 
 
 
@@ -724,6 +1223,755 @@ view: fact_ventas {
 
 
 #################################################################### FIN CALCULOS ANUALES ##################################################################
+
+
+
+#################################################################### INICIO CALCULOS TRIMESTRALES ##################################################################
+
+
+
+  measure: QTY_QTD {
+    group_label: "Trimestral-QTY"
+    label: "QTY QTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_current_quarter
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Venta"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_QTD]
+
+    value_format: "#,##0"
+  }
+
+  measure: LY_QTY_QTD {
+     group_label: "Trimestral-QTY"
+    label: "LY QTY QTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_previous_quarter
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Venta"]
+
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_QTY_QTD {
+     group_label: "Trimestral-QTY"
+    label: "% VS QTY QTD"
+    type: number
+    sql: (${QTY_QTD} - ${LY_QTY_QTD}) / NULLIF(${LY_QTY_QTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_QTD,LY_QTY_QTD, INDEX_QTY_QTD]
+
+    value_format: "0.00\%"
+
+  }
+
+
+  measure: QTY_Ptto_QTD {
+    group_label: "Trimestral-QTY-Ptto"
+    label: "QTY Ptto QTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_current_quarter
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_Ptto_QTD]
+
+    value_format: "#,##0"
+  }
+
+  measure: LY_QTY_Ptto_QTD {
+    group_label: "Trimestral-QTY-Ptto"
+    label: "LY QTY Ptto QTD"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field:  is_previous_quarter
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Presupuesto"]
+
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_QTY_Ptto_QTD {
+    group_label: "Trimestral-QTY-Ptto"
+    label: "% VS QTY Ptto QTD"
+    type: number
+    sql: (${QTY_Ptto_QTD} - ${LY_QTY_Ptto_QTD}) / NULLIF(${LY_QTY_Ptto_QTD},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_Ptto_QTD,LY_QTY_Ptto_QTD, INDEX_QTY_Ptto_QTD]
+
+      value_format: "0.00\%"
+
+    }
+
+
+
+
+    measure: Monto_Conversion_QTD {
+      group_label: "Trimestral-Monto_Conversion"
+      label: "Monto Conversion QTD"
+      type: sum
+      sql:  ${monto_conversion} ;;
+
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_Conversion_QTD]
+
+      filters: {
+        field: is_current_quarter
+        value: "yes"
+      }
+
+      filters: [tipo_transaccion: "Venta"]
+
+      value_format: "#,##0"
+    }
+
+    measure: LY_Monto_Conversion_QTD {
+      group_label: "Trimestral-Monto_Conversion"
+      label: "LY Monto Conversion QTD"
+      type: sum
+      sql: ${monto_conversion} ;;
+
+      filters: {
+        field: is_previous_quarter
+        value: "yes"
+      }
+
+      filters: [tipo_transaccion: "Venta"]
+
+      value_format: "#,##0"
+    }
+
+
+    measure: INDEX_Monto_Conversion_QTD {
+      group_label: "Trimestral-Monto_Conversion"
+      label: "% VS Monto Conversion QTD"
+      type: number
+      sql: (${Monto_Conversion_QTD} - ${LY_Monto_Conversion_QTD}) / NULLIF(${LY_Monto_Conversion_QTD},0)*100 ;;
+
+      html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_Conversion_QTD,LY_Monto_Conversion_QTD, INDEX_Monto_Conversion_QTD]
+      value_format: "0.00\%"
+
+    }
+
+    measure: Ptto_Conversion_QTD {
+      group_label: "Trimestral-Ptto_Conversion"
+      label: "Ptto Conversion QTD"
+      type: sum
+      sql:  ${monto_conversion} ;;
+
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_Conversion_QTD]
+
+      filters: {
+        field: is_current_quarter
+        value: "yes"
+      }
+
+      filters: [tipo_transaccion: "Presupuesto"]
+
+      value_format: "#,##0"
+    }
+
+    measure: LY_Ptto_Conversion_QTD {
+      group_label: "Trimestral-Ptto_Conversion"
+      label: "LY Ptto Conversion QTD"
+      type: sum
+      sql: ${monto_conversion} ;;
+
+      filters: {
+        field: is_previous_quarter
+        value: "yes"
+      }
+
+      filters: [tipo_transaccion: "Presupuesto"]
+
+      value_format: "#,##0"
+    }
+
+
+    measure: INDEX_Ptto_Conversion_QTD {
+      group_label: "Trimestral-Ptto_Conversion"
+      label: "% VS Ptto Conversion QTD"
+      type: number
+      sql: (${Ptto_Conversion_QTD} - ${LY_Ptto_Conversion_QTD}) / NULLIF(${LY_Ptto_Conversion_QTD},0)*100 ;;
+
+      html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+        drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_Conversion_QTD,LY_Ptto_Conversion_QTD, INDEX_Ptto_Conversion_QTD]
+        value_format: "0.00\%"
+
+      }
+
+
+
+
+      measure: Monto_QTD {
+        group_label: "Trimestral-Monto"
+        label: "Monto QTD"
+        type: sum
+        sql:  ${monto} ;;
+
+
+        drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_QTD]
+
+        filters: {
+          field: is_current_quarter
+          value: "yes"
+        }
+
+        filters: [tipo_transaccion: "Venta"]
+
+        value_format: "$#,##0.00"
+      }
+
+      measure: LY_Monto_QTD {
+        group_label: "Trimestral-Monto"
+        label: "LY Monto QTD"
+        type: sum
+        sql: ${monto} ;;
+
+        filters: {
+          field: is_previous_quarter
+          value: "yes"
+        }
+
+        filters: [tipo_transaccion: "Venta"]
+
+        value_format: "$#,##0.00"
+      }
+
+
+      measure: INDEX_Monto_QTD {
+        group_label: "Trimestral-Monto"
+        label: "% VS Monto  QTD"
+        type: number
+        sql: (${Monto_QTD} - ${LY_Monto_QTD}) / NULLIF(${LY_Monto_QTD},0)*100 ;;
+
+        html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+        drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_QTD,LY_Monto_QTD, INDEX_Monto_QTD]
+        value_format: "0.00\%"
+
+      }
+
+
+      measure: Ptto_QTD {
+        group_label: "Trimestral-Ptto"
+        label: "Ptto QTD"
+        type: sum
+        sql:  ${monto} ;;
+
+
+        drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_QTD]
+
+        filters: {
+          field: is_current_quarter
+          value: "yes"
+        }
+
+        filters: [tipo_transaccion: "Presupuesto"]
+
+        value_format: "$#,##0.00"
+      }
+
+      measure: LY_Ptto_QTD {
+        group_label: "Trimestral-Ptto"
+        label: "LY Ptto QTD"
+        type: sum
+        sql: ${monto} ;;
+
+        filters: {
+          field: is_previous_quarter
+          value: "yes"
+        }
+
+        filters: [tipo_transaccion: "Presupuesto"]
+
+        value_format: "$#,##0.00"
+      }
+
+
+      measure: INDEX_Ptto_QTD {
+        group_label: "Trimestral-Ptto"
+        label: "% VS Ptto  QTD"
+        type: number
+        sql: (${Ptto_QTD} - ${LY_Ptto_QTD}) / NULLIF(${LY_Ptto_QTD},0)*100 ;;
+
+        html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+          drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_QTD,LY_Ptto_QTD, INDEX_Ptto_QTD]
+          value_format: "0.00\%"
+
+        }
+
+
+
+
+
+
+
+
+  #################################################################### FIN CALCULOS TRIMESTRALES ##################################################################
+
+
+ #################################################################### INICIO CALCULOS SEMESTRALES ##################################################################
+
+  measure: QTY_SEM {
+    group_label: "Semestral-QTY"
+    label: "QTY SEM"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_current_semester
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Venta"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_SEM]
+
+    value_format: "#,##0"
+  }
+
+  measure: LY_QTY_SEM {
+    group_label: "Semestral-QTY"
+    label: "LY QTY SEM"
+    type: sum
+    sql: ${cantidad} ;;
+
+    filters: {
+      field: is_previous_semester
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Venta"]
+
+    value_format: "#,##0"
+  }
+
+
+  measure: INDEX_QTY_SEM {
+    group_label: "Semestral-QTY"
+    label: "% VS QTY SEM"
+    type: number
+    sql: (${QTY_SEM} - ${LY_QTY_SEM}) / NULLIF(${LY_QTY_SEM},0)*100 ;;
+
+    html:
+    {% if value > 0 %}
+    <span style="color: green;">{{ rendered_value }}</span></p>
+    {% elsif  value < 0 %}
+    <span style="color: red;">{{ rendered_value }}</span></p>
+    {% elsif  value == 0 %}
+    {{rendered_value}}
+    {% else %}
+    {{rendered_value}}
+    {% endif %} ;;
+
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_SEM,LY_QTY_SEM, INDEX_QTY_SEM]
+
+      value_format: "0.00\%"
+
+    }
+
+
+    measure: QTY_Ptto_SEM {
+      group_label: "Semestral-QTY-Ptto"
+      label: "QTY Ptto SEM"
+      type: sum
+      sql: ${cantidad} ;;
+
+      filters: {
+        field: is_current_semester
+        value: "yes"
+      }
+
+      filters: [tipo_transaccion: "Presupuesto"]
+
+      drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_Ptto_SEM]
+
+      value_format: "#,##0"
+    }
+
+    measure: LY_QTY_Ptto_SEM {
+      group_label: "Semestral-QTY-Ptto"
+      label: "LY QTY Ptto SEM"
+      type: sum
+      sql: ${cantidad} ;;
+
+      filters: {
+        field:  is_previous_semester
+        value: "yes"
+      }
+
+      filters: [tipo_transaccion: "Presupuesto"]
+
+      value_format: "#,##0"
+    }
+
+
+    measure: INDEX_QTY_Ptto_SEM {
+      group_label: "Trimestral-QTY-Ptto"
+      label: "% VS QTY Ptto SEM"
+      type: number
+      sql: (${QTY_Ptto_SEM} - ${LY_QTY_Ptto_SEM}) / NULLIF(${LY_QTY_Ptto_SEM},0)*100 ;;
+
+      html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+        drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_Ptto_SEM,LY_QTY_Ptto_SEM, INDEX_QTY_Ptto_SEM]
+
+        value_format: "0.00\%"
+
+      }
+
+
+
+
+      measure: Monto_Conversion_SEM {
+        group_label: "Semestral-Monto_Conversion"
+        label: "Monto Conversion SEM"
+        type: sum
+        sql:  ${monto_conversion} ;;
+
+
+        drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_Conversion_SEM]
+
+        filters: {
+          field: is_current_semester
+          value: "yes"
+        }
+
+        filters: [tipo_transaccion: "Venta"]
+
+        value_format: "#,##0"
+      }
+
+      measure: LY_Monto_Conversion_SEM {
+        group_label: "Semestral-Monto_Conversion"
+        label: "LY Monto Conversion SEM"
+        type: sum
+        sql: ${monto_conversion} ;;
+
+        filters: {
+          field: is_previous_semester
+          value: "yes"
+        }
+
+        filters: [tipo_transaccion: "Venta"]
+
+        value_format: "#,##0"
+      }
+
+
+      measure: INDEX_Monto_Conversion_SEM {
+        group_label: "Semestral-Monto_Conversion"
+        label: "% VS Monto Conversion SEM"
+        type: number
+        sql: (${Monto_Conversion_SEM} - ${LY_Monto_Conversion_SEM}) / NULLIF(${LY_Monto_Conversion_SEM},0)*100 ;;
+
+        html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+          drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_Conversion_SEM,LY_Monto_Conversion_SEM, INDEX_Monto_Conversion_SEM]
+          value_format: "0.00\%"
+
+        }
+
+        measure: Ptto_Conversion_SEM {
+          group_label: "Semestral-Ptto_Conversion"
+          label: "Ptto Conversion SEM"
+          type: sum
+          sql:  ${monto_conversion} ;;
+
+
+          drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_Conversion_SEM]
+
+          filters: {
+            field: is_current_semester
+            value: "yes"
+          }
+
+          filters: [tipo_transaccion: "Presupuesto"]
+
+          value_format: "#,##0"
+        }
+
+        measure: LY_Ptto_Conversion_SEM {
+          group_label: "Semestral-Ptto_Conversion"
+          label: "LY Ptto Conversion SEM"
+          type: sum
+          sql: ${monto_conversion} ;;
+
+          filters: {
+            field: is_previous_semester
+            value: "yes"
+          }
+
+          filters: [tipo_transaccion: "Presupuesto"]
+
+          value_format: "#,##0"
+        }
+
+
+        measure: INDEX_Ptto_Conversion_SEM {
+          group_label: "Semestral-Ptto_Conversion"
+          label: "% VS Ptto Conversion SEM"
+          type: number
+          sql: (${Ptto_Conversion_SEM} - ${LY_Ptto_Conversion_SEM}) / NULLIF(${LY_Ptto_Conversion_SEM},0)*100 ;;
+
+          html:
+          {% if value > 0 %}
+          <span style="color: green;">{{ rendered_value }}</span></p>
+          {% elsif  value < 0 %}
+          <span style="color: red;">{{ rendered_value }}</span></p>
+          {% elsif  value == 0 %}
+          {{rendered_value}}
+          {% else %}
+          {{rendered_value}}
+          {% endif %} ;;
+
+
+            drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_Conversion_SEM,LY_Ptto_Conversion_SEM, INDEX_Ptto_Conversion_SEM]
+            value_format: "0.00\%"
+
+          }
+
+
+
+
+          measure: Monto_SEM {
+            group_label: "Semestral-Monto"
+            label: "Monto SEM"
+            type: sum
+            sql:  ${monto} ;;
+
+
+            drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Monto_SEM]
+
+            filters: {
+              field: is_current_semester
+              value: "yes"
+            }
+
+            filters: [tipo_transaccion: "Venta"]
+
+            value_format: "$#,##0.00"
+          }
+
+          measure: LY_Monto_SEM {
+            group_label: "Semestral-Monto"
+            label: "LY Monto SEM"
+            type: sum
+            sql: ${monto} ;;
+
+            filters: {
+              field: is_previous_semester
+              value: "yes"
+            }
+
+            filters: [tipo_transaccion: "Venta"]
+
+            value_format: "$#,##0.00"
+          }
+
+
+          measure: INDEX_Monto_SEM {
+            group_label: "Semestral-Monto"
+            label: "% VS Monto  SEM"
+            type: number
+            sql: (${Monto_SEM} - ${LY_Monto_SEM}) / NULLIF(${LY_Monto_SEM},0)*100 ;;
+
+            html:
+                      {% if value > 0 %}
+                      <span style="color: green;">{{ rendered_value }}</span></p>
+                      {% elsif  value < 0 %}
+                      <span style="color: red;">{{ rendered_value }}</span></p>
+                      {% elsif  value == 0 %}
+                      {{rendered_value}}
+                      {% else %}
+                      {{rendered_value}}
+                      {% endif %} ;;
+
+
+              drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_SEM,LY_Monto_SEM, INDEX_Monto_SEM]
+              value_format: "0.00\%"
+
+            }
+
+
+            measure: Ptto_SEM {
+              group_label: "Semestral-Ptto"
+              label: "Ptto SEM"
+              type: sum
+              sql:  ${monto} ;;
+
+
+              drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, Ptto_SEM]
+
+              filters: {
+                field: is_current_semester
+                value: "yes"
+              }
+
+              filters: [tipo_transaccion: "Presupuesto"]
+
+              value_format: "$#,##0.00"
+            }
+
+            measure: LY_Ptto_SEM {
+              group_label: "Semestral-Ptto"
+              label: "LY Ptto SEM"
+              type: sum
+              sql: ${monto} ;;
+
+              filters: {
+                field: is_previous_semester
+                value: "yes"
+              }
+
+              filters: [tipo_transaccion: "Presupuesto"]
+
+              value_format: "$#,##0.00"
+            }
+
+
+            measure: INDEX_Ptto_SEM {
+              group_label: "Semestral-Ptto"
+              label: "% VS Ptto  SEM"
+              type: number
+              sql: (${Ptto_SEM} - ${LY_Ptto_SEM}) / NULLIF(${LY_Ptto_SEM},0)*100 ;;
+
+              html:
+                        {% if value > 0 %}
+                        <span style="color: green;">{{ rendered_value }}</span></p>
+                        {% elsif  value < 0 %}
+                        <span style="color: red;">{{ rendered_value }}</span></p>
+                        {% elsif  value == 0 %}
+                        {{rendered_value}}
+                        {% else %}
+                        {{rendered_value}}
+                        {% endif %} ;;
+
+
+                drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_SEM,LY_Ptto_SEM, INDEX_Ptto_SEM]
+                value_format: "0.00\%"
+
+              }
+
+
+
+
+ #################################################################### FIN CALCULOS SEMESTRALES ##################################################################
+
+
 
 
 
