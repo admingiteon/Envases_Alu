@@ -503,7 +503,8 @@ view: fact_ventas {
       label: "% VS QTY MTD"
     type: number
     #sql: (${QTY_MTD} - ${LY_QTY_MTD}) / CASE WHEN ${LY_QTY_MTD} = 0,0)*100 ;;
-    sql: CASE WHEN ${LY_QTY_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_MTD}) / COALESCE (${LY_QTY_MTD}, 0)*100  ;;
+    #sql: CASE WHEN ${LY_QTY_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_MTD}) / COALESCE (${LY_QTY_MTD}, 0)*100 END  ;;
+    sql: CASE WHEN ${QTY_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_MTD})/ NULLIF(${LY_QTY_MTD},0) END ;;
 
     html:
     {% if value > 0 %}
@@ -563,7 +564,8 @@ view: fact_ventas {
     label: "% VS QTY Ptto MTD"
     type: number
     #sql: (${QTY_MTD} - ${LY_QTY_MTD}) / CASE WHEN ${LY_QTY_MTD} = 0,0)*100 ;;
-    sql: CASE WHEN ${QTY_Ptto_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_Ptto_MTD}) / COALESCE (${LY_QTY_Ptto_MTD}, 0)*100  ;;
+    #sql: CASE WHEN ${QTY_Ptto_MTD} = 0 THEN 1 ELSE (${QTY_Ptto_MTD} - ${LY_QTY_Ptto_MTD}) / COALESCE (nullif(${LY_QTY_Ptto_MTD},0), 0)*100 END ;;
+    sql: CASE WHEN ${QTY_Ptto_MTD} = 0 THEN 1 ELSE (${QTY_Ptto_MTD} - ${LY_QTY_Ptto_MTD})/ NULLIF(${LY_QTY_Ptto_MTD},0) END ;;
 
     html:
     {% if value > 0 %}
