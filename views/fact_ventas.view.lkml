@@ -123,7 +123,7 @@ view: fact_ventas {
   dimension: monto {
     hidden: yes
     type: number
-    sql: ${TABLE}.Monto / 1000 ;;
+    sql: ${TABLE}.monto_conversion_usd / 1000 ;;
   }
 
   #dimension: moneda_conversion {
