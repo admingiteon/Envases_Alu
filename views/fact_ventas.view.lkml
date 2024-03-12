@@ -61,7 +61,7 @@ view: fact_ventas {
   }
 
   dimension: tipo_documento {
-    hidden: yes
+    #hidden: yes
     type: string
     sql: ${TABLE}.Tipo_Documento ;;
   }
