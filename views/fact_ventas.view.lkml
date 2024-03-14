@@ -600,7 +600,7 @@ view: fact_ventas {
     group_label: "Mensual-QTY"
     label: "QTY_MTD GTQ"
     type: sum
-    sql: case when ${moneda_transaccion}="GTQ" then ${monto_conversion}  else 0  end ;;
+    sql: case when ${TABLE}.Moneda_Transaccion ="GTQ" then ${monto}  else 0  end ;;
 
     filters: {
       field: is_current_period
@@ -610,7 +610,7 @@ view: fact_ventas {
     filters: [tipo_transaccion: "Venta"]
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_MTD]
-    value_format: "#,##0"
+    value_format: "$#,##0.00"
   }
 
 
