@@ -481,6 +481,8 @@ view: fact_ventas {
     value_format: "#,##0"
   }
 
+
+
   measure: LY_QTY_MTD {
     group_label: "Mensual-QTY"
     label: "LY QTY MTD"
@@ -590,6 +592,30 @@ view: fact_ventas {
 
 
   #### FIN CANTIDAD ####
+
+
+
+
+  measure: QTY_MTD_GTQ {
+    group_label: "Mensual-QTY"
+    label: "QTY_MTD GTQ"
+    type: sum
+    sql: case when ${moneda_transaccion}="GTQ" then ${monto} else  ${monto_conversion} end ;;
+
+    filters: {
+      field: is_current_period
+      value: "yes"
+    }
+
+    filters: [tipo_transaccion: "Venta"]
+
+    drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion, QTY_MTD]
+    value_format: "#,##0"
+  }
+
+
+
+
 
   #### INICIO MONTO CONVERSION ####
 
