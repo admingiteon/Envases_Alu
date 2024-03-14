@@ -600,7 +600,7 @@ view: fact_ventas {
     group_label: "Mensual-QTY"
     label: "QTY_MTD GTQ"
     type: sum
-    sql: case when ${moneda_transaccion}="GTQ" then ${monto} else  ${monto_conversion} end ;;
+    sql: case when ${moneda_transaccion}="GTQ" then ${monto_conversion}  else 0  end ;;
 
     filters: {
       field: is_current_period
