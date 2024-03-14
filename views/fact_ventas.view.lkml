@@ -126,6 +126,14 @@ view: fact_ventas {
     sql: ${TABLE}.monto_conversion_usd / 1000 ;;
   }
 
+
+  dimension: monto_original {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.Monto / 1000 ;;
+  }
+
+
   #dimension: moneda_conversion {
   #  hidden: yes
   #  type: string
@@ -600,7 +608,7 @@ view: fact_ventas {
     group_label: "Mensual-QTY"
     label: "QTY_MTD GTQ"
     type: sum
-    sql: case when ${TABLE}.Moneda_Transaccion ="GTQ" then ${monto}  else 0  end ;;
+    sql: case when ${TABLE}.Moneda_Transaccion ="GTQ" then ${monto_original}     else ${monto} end ;;
 
     filters: {
       field: is_current_period
