@@ -85,7 +85,7 @@ view: fact_ventas {
   }
 
   dimension: cliente {
-    hidden: yes
+    #hidden: yes
     type: string
     sql: ${TABLE}.Cliente ;;
   }
