@@ -126,6 +126,12 @@ view: fact_ventas {
     sql: ${TABLE}.monto_conversion_usd / 1000 ;;
   }
 
+  dimension: division {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.division ;;
+  }
+
 
   dimension: monto_original {
     hidden: yes

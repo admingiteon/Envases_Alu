@@ -14,7 +14,12 @@ explore: fact_ventas {
 
   join: dim_cliente {
     type: left_outer
-    sql_on: ${fact_ventas.cliente} = ${dim_cliente.codigo_cliente} and ${fact_ventas.id_fuente} = ${dim_cliente.id_fuente} ;;
+    sql_on: ${fact_ventas.cliente} = ${dim_cliente.codigo_cliente}
+        and ${fact_ventas.id_fuente} = ${dim_cliente.id_fuente}
+        and ${fact_ventas.organizacion_ventas} = ${dim_cliente.organizacion_ventas}
+        and ${fact_ventas.canal_distribucion} = ${dim_cliente.canal_distribucion}
+        and ${fact_ventas.division} = ${dim_cliente.division}
+      ;;
     relationship: many_to_one
   }
 
