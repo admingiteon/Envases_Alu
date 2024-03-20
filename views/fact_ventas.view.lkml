@@ -67,10 +67,18 @@ view: fact_ventas {
   }
 
   dimension: canal_distribucion {
+    hidden: yes
     label: "Canal Distribución"
     type: string
     sql: ${TABLE}.Canal_Distribucion ;;
   }
+
+  dimension: canal {
+    label: "Canal Distribución"
+    type: string
+    sql:case when ${TABLE}.Canal_Distribucion in ('00','10','50') then 'Nacional' else 'Exportaciòn' end ;;
+  }
+
 
   dimension: material {
     hidden: yes
