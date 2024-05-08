@@ -31,6 +31,14 @@ view: fact_ventas {
 
 ################DIMENSIONES
 
+
+  dimension: Status_Transferencia_Contable {
+    type: string
+    sql: ${TABLE}.Status_Transferencia_Contable ;;
+  }
+
+
+
   dimension: hoy {
     type: date
     sql: current_date();;
