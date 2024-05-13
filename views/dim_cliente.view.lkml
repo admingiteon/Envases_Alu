@@ -51,7 +51,7 @@ view: dim_cliente {
 
   dimension: grupo_ventas {
     type: string
-    sql: ${TABLE}.Grupo_Ventas ;;
+    sql: ${TABLE}.Grupo_Clientes ;;
   }
 
   set: detail {
