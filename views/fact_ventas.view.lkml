@@ -751,7 +751,10 @@ view: fact_ventas {
     group_label: "Mensual-Ptto Conversion"
     label: "% VS Ptto Conversion MTD"
     type: number
-    sql: (${Ptto_Conversion_MTD} - ${LY_Ptto_Conversion_MTD} ) / NULLIF(${LY_Ptto_Conversion_MTD},0)*100 ;;
+    sql: (${Monto_Conversion_MTD} - ${Ptto_Conversion_MTD} ) / NULLIF(${Ptto_Conversion_MTD},0)*100 ;;
+
+
+
 
     html:
     {% if value > 0 %}
@@ -844,10 +847,7 @@ view: fact_ventas {
     type: sum
     sql:${monto} ;;
 
-    filters: {
-      field: is_current_period
-      value: "yes"
-    }
+
 
     filters: [tipo_transaccion: "Presupuesto"]
 
@@ -877,7 +877,7 @@ view: fact_ventas {
     group_label: "Mensual-Ptto"
     label: "% VS Ptto MTD"
     type: number
-    sql: (${Ptto_MTD} - ${LY_Ptto_MTD}) / NULLIF(${LY_Ptto_MTD},0)*100 ;;
+    sql: ( ${Monto_MTD}-${Ptto_MTD} ) / NULLIF(${Ptto_MTD},0)*100 ;;
 
     html:
     {% if value > 0 %}
@@ -1009,7 +1009,7 @@ view: fact_ventas {
     group_label: "Anual-QTY-Ptto"
     label: "% VS QTY Ptto YTD"
     type: number
-    sql: (${QTY_Ptto_YTD} - ${LY_QTY_Ptto_YTD}) / NULLIF(${LY_QTY_Ptto_YTD},0)*100 ;;
+    sql: (${QTY_YTD} - ${QTY_Ptto_YTD}) / NULLIF(${QTY_Ptto_YTD},0)*100 ;;
 
     html:
     {% if value > 0 %}
@@ -1131,7 +1131,10 @@ view: fact_ventas {
     group_label: "Anual-Ptto_Conversion"
     label: "% VS Ptto Conversion YTD"
     type: number
-    sql: (${Ptto_Conversion_YTD} - ${LY_Ptto_Conversion_YTD}) / NULLIF(${LY_Ptto_Conversion_YTD},0)*100 ;;
+    sql: (${Monto_Conversion_YTD} - ${Ptto_Conversion_YTD}) / NULLIF(${Ptto_Conversion_YTD},0)*100 ;;
+
+
+
 
     html:
           {% if value > 0 %}
@@ -1253,7 +1256,7 @@ view: fact_ventas {
     group_label: "Anual-Ptto"
     label: "% VS Ptto  YTD"
     type: number
-    sql: (${Ptto_YTD} - ${LY_Ptto_YTD}) / NULLIF(${LY_Ptto_YTD},0)*100 ;;
+    sql: (${Monto_YTD} - ${Ptto_YTD}) / NULLIF(${Ptto_YTD},0)*100 ;;
 
     html:
           {% if value > 0 %}
@@ -1387,7 +1390,9 @@ view: fact_ventas {
     group_label: "Trimestral-QTY-Ptto"
     label: "% VS QTY Ptto QTD"
     type: number
-    sql: (${QTY_Ptto_QTD} - ${LY_QTY_Ptto_QTD}) / NULLIF(${LY_QTY_Ptto_QTD},0)*100 ;;
+    sql: (${QTY_QTD} - ${QTY_Ptto_QTD}) / NULLIF(${QTY_Ptto_QTD},0)*100 ;;
+
+
 
     html:
     {% if value > 0 %}
@@ -1509,7 +1514,10 @@ view: fact_ventas {
       group_label: "Trimestral-Ptto_Conversion"
       label: "% VS Ptto Conversion QTD"
       type: number
-      sql: (${Ptto_Conversion_QTD} - ${LY_Ptto_Conversion_QTD}) / NULLIF(${LY_Ptto_Conversion_QTD},0)*100 ;;
+      sql: (${Monto_Conversion_QTD} - ${Ptto_Conversion_QTD}) / NULLIF(${Ptto_Conversion_QTD},0)*100 ;;
+
+
+
 
       html:
           {% if value > 0 %}
@@ -1631,7 +1639,8 @@ view: fact_ventas {
         group_label: "Trimestral-Ptto"
         label: "% VS Ptto  QTD"
         type: number
-        sql: (${Ptto_QTD} - ${LY_Ptto_QTD}) / NULLIF(${LY_Ptto_QTD},0)*100 ;;
+        sql: (${Monto_QTD} - ${Ptto_QTD}) / NULLIF(${Ptto_QTD},0)*100 ;;
+
 
         html:
           {% if value > 0 %}
@@ -1761,7 +1770,7 @@ view: fact_ventas {
       group_label: "Trimestral-QTY-Ptto"
       label: "% VS QTY Ptto SEM"
       type: number
-      sql: (${QTY_Ptto_SEM} - ${LY_QTY_Ptto_SEM}) / NULLIF(${LY_QTY_Ptto_SEM},0)*100 ;;
+      sql: (${QTY_SEM} - ${QTY_Ptto_SEM}) / NULLIF(${QTY_Ptto_SEM},0)*100 ;;
 
       html:
           {% if value > 0 %}
@@ -1883,7 +1892,8 @@ view: fact_ventas {
           group_label: "Semestral-Ptto_Conversion"
           label: "% VS Ptto Conversion SEM"
           type: number
-          sql: (${Ptto_Conversion_SEM} - ${LY_Ptto_Conversion_SEM}) / NULLIF(${LY_Ptto_Conversion_SEM},0)*100 ;;
+          sql: (${Monto_Conversion_SEM} - ${Ptto_Conversion_SEM}) / NULLIF(${Ptto_Conversion_SEM},0)*100 ;;
+
 
           html:
           {% if value > 0 %}
@@ -2005,7 +2015,8 @@ view: fact_ventas {
               group_label: "Semestral-Ptto"
               label: "% VS Ptto  SEM"
               type: number
-              sql: (${Ptto_SEM} - ${LY_Ptto_SEM}) / NULLIF(${LY_Ptto_SEM},0)*100 ;;
+              sql: (${Monto_SEM} - ${Ptto_SEM}) / NULLIF(${Ptto_SEM},0)*100 ;;
+
 
               html:
                         {% if value > 0 %}
