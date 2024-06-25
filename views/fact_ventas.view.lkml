@@ -32,6 +32,17 @@ view: fact_ventas {
 ################DIMENSIONES
 
 
+
+
+
+  dimension: fecha_ultimo {
+    type: date
+    sql:  CAST({% date_start date_filter %} AS DATE);;
+  }
+
+
+
+
   dimension: Status_Transferencia_Contable {
     type: string
     sql: ${TABLE}.Status_Transferencia_Contable ;;
@@ -315,7 +326,7 @@ view: fact_ventas {
 
   measure: ult_act {
     type: date
-    label: "Update date"
+    label: "Fecha actualización"
     sql: MAX(${actualizacion});;
     convert_tz: no
   }
