@@ -19,6 +19,13 @@ view: dim_planta {
     sql: ${TABLE}.ID_Planta ;;
   }
 
+  dimension: Nombre_Agrupador {
+    type: string
+    sql: ${TABLE}.Nombre_Agrupador ;;
+  }
+
+
+
   dimension: nombre_planta {
     label: "Planta"
     type: string
