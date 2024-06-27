@@ -547,18 +547,24 @@ view: fact_ventas {
     type: number
     #sql: (${QTY_MTD} - ${LY_QTY_MTD}) / CASE WHEN ${LY_QTY_MTD} = 0,0)*100 ;;
     #sql: CASE WHEN ${LY_QTY_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_MTD}) / COALESCE (${LY_QTY_MTD}, 0)*100 END  ;;
-    sql: CASE WHEN ${QTY_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_MTD})/ NULLIF(${LY_QTY_MTD},0) END ;;
+    sql: CASE WHEN ${QTY_MTD} = 0 THEN 1 ELSE (${QTY_MTD} - ${LY_QTY_MTD})/ NULLIF(${LY_QTY_MTD},0) END * 100;;
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_MTD,LY_QTY_MTD, INDEX_QTY_MTD]
@@ -608,18 +614,24 @@ view: fact_ventas {
     type: number
     #sql: (${QTY_MTD} - ${LY_QTY_MTD}) / CASE WHEN ${LY_QTY_MTD} = 0,0)*100 ;;
     #sql: CASE WHEN ${QTY_Ptto_MTD} = 0 THEN 1 ELSE (${QTY_Ptto_MTD} - ${LY_QTY_Ptto_MTD}) / COALESCE (nullif(${LY_QTY_Ptto_MTD},0), 0)*100 END ;;
-    sql: CASE WHEN ${QTY_Ptto_MTD} = 0 THEN 1 ELSE (${QTY_Ptto_MTD} - ${LY_QTY_Ptto_MTD})/ NULLIF(${LY_QTY_Ptto_MTD},0) END ;;
+    sql: CASE WHEN ${QTY_Ptto_MTD} = 0 THEN 1 ELSE (${QTY_Ptto_MTD} - ${LY_QTY_Ptto_MTD})/ NULLIF(${LY_QTY_Ptto_MTD},0) END  * 100;;
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_Ptto_MTD,LY_QTY_Ptto_MTD, INDEX_QTY_Ptto_MTD]
@@ -704,14 +716,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_Conversion_MTD,LY_Monto_Conversion_MTD, INDEX_Monto_Conversion_MTD]
@@ -769,14 +787,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_Conversion_MTD,LY_Ptto_Conversion_MTD, INDEX_Ptto_Conversion_MTD]
@@ -836,14 +860,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_MTD,LY_Monto_MTD, INDEX_MONTO_MTD]
@@ -892,14 +922,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_MTD,LY_Ptto_MTD, INDEX_Ptto_MTD]
@@ -964,14 +1000,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_YTD,LY_QTY_YTD, INDEX_QTY_YTD]
@@ -1024,14 +1066,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_Ptto_YTD,LY_QTY_Ptto_YTD, INDEX_QTY_Ptto_YTD]
@@ -1086,15 +1134,21 @@ view: fact_ventas {
       sql: (${Monto_Conversion_YTD} - ${LY_Monto_Conversion_YTD}) / NULLIF(${LY_Monto_Conversion_YTD},0)*100 ;;
 
       html:
-          {% if value > 0 %}
-          <span style="color: green;">{{ rendered_value }}</span></p>
-          {% elsif  value < 0 %}
-          <span style="color: red;">{{ rendered_value }}</span></p>
-          {% elsif  value == 0 %}
-          {{rendered_value}}
-          {% else %}
-          {{rendered_value}}
-          {% endif %} ;;
+      {% if value > 0 %}
+      {% assign indicator = "green,▲" | split: ',' %}
+      {% else %}
+      {% assign indicator = "red,▼" | split: ',' %}
+      {% endif %}
+
+      <font color="{{indicator[0]}}">
+
+      {% if value == 99999.12345 %} &infin
+
+      {% else %}{{rendered_value}}
+
+      {% endif %} {{indicator[1]}}
+
+      </font> ;;
 
 
       drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_Conversion_YTD,LY_Monto_Conversion_YTD, INDEX_Monto_Conversion_YTD]
@@ -1148,15 +1202,21 @@ view: fact_ventas {
 
 
     html:
-          {% if value > 0 %}
-          <span style="color: green;">{{ rendered_value }}</span></p>
-          {% elsif  value < 0 %}
-          <span style="color: red;">{{ rendered_value }}</span></p>
-          {% elsif  value == 0 %}
-          {{rendered_value}}
-          {% else %}
-          {{rendered_value}}
-          {% endif %} ;;
+    {% if value > 0 %}
+    {% assign indicator = "green,▲" | split: ',' %}
+    {% else %}
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_Conversion_YTD,LY_Ptto_Conversion_YTD, INDEX_Ptto_Conversion_YTD]
@@ -1210,15 +1270,21 @@ view: fact_ventas {
     sql: (${Monto_YTD} - ${LY_Monto_YTD}) / NULLIF(${LY_Monto_YTD},0)*100 ;;
 
     html:
-          {% if value > 0 %}
-          <span style="color: green;">{{ rendered_value }}</span></p>
-          {% elsif  value < 0 %}
-          <span style="color: red;">{{ rendered_value }}</span></p>
-          {% elsif  value == 0 %}
-          {{rendered_value}}
-          {% else %}
-          {{rendered_value}}
-          {% endif %} ;;
+    {% if value > 0 %}
+    {% assign indicator = "green,▲" | split: ',' %}
+    {% else %}
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_YTD,LY_Monto_YTD, INDEX_Monto_YTD]
@@ -1270,15 +1336,21 @@ view: fact_ventas {
     sql: (${Monto_YTD} - ${Ptto_YTD}) / NULLIF(${Ptto_YTD},0)*100 ;;
 
     html:
-          {% if value > 0 %}
-          <span style="color: green;">{{ rendered_value }}</span></p>
-          {% elsif  value < 0 %}
-          <span style="color: red;">{{ rendered_value }}</span></p>
-          {% elsif  value == 0 %}
-          {{rendered_value}}
-          {% else %}
-          {{rendered_value}}
-          {% endif %} ;;
+    {% if value > 0 %}
+    {% assign indicator = "green,▲" | split: ',' %}
+    {% else %}
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_YTD,LY_Ptto_YTD, INDEX_Ptto_YTD]
@@ -1345,14 +1417,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
     drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_QTD,LY_QTY_QTD, INDEX_QTY_QTD]
@@ -1407,14 +1485,20 @@ view: fact_ventas {
 
     html:
     {% if value > 0 %}
-    <span style="color: green;">{{ rendered_value }}</span></p>
-    {% elsif  value < 0 %}
-    <span style="color: red;">{{ rendered_value }}</span></p>
-    {% elsif  value == 0 %}
-    {{rendered_value}}
+    {% assign indicator = "green,▲" | split: ',' %}
     {% else %}
-    {{rendered_value}}
-    {% endif %} ;;
+    {% assign indicator = "red,▼" | split: ',' %}
+    {% endif %}
+
+    <font color="{{indicator[0]}}">
+
+    {% if value == 99999.12345 %} &infin
+
+    {% else %}{{rendered_value}}
+
+    {% endif %} {{indicator[1]}}
+
+    </font> ;;
 
 
       drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,QTY_Ptto_QTD,LY_QTY_Ptto_QTD, INDEX_QTY_Ptto_QTD]
@@ -1469,15 +1553,21 @@ view: fact_ventas {
       sql: (${Monto_Conversion_QTD} - ${LY_Monto_Conversion_QTD}) / NULLIF(${LY_Monto_Conversion_QTD},0)*100 ;;
 
       html:
-          {% if value > 0 %}
-          <span style="color: green;">{{ rendered_value }}</span></p>
-          {% elsif  value < 0 %}
-          <span style="color: red;">{{ rendered_value }}</span></p>
-          {% elsif  value == 0 %}
-          {{rendered_value}}
-          {% else %}
-          {{rendered_value}}
-          {% endif %} ;;
+      {% if value > 0 %}
+      {% assign indicator = "green,▲" | split: ',' %}
+      {% else %}
+      {% assign indicator = "red,▼" | split: ',' %}
+      {% endif %}
+
+      <font color="{{indicator[0]}}">
+
+      {% if value == 99999.12345 %} &infin
+
+      {% else %}{{rendered_value}}
+
+      {% endif %} {{indicator[1]}}
+
+      </font> ;;
 
 
       drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_Conversion_QTD,LY_Monto_Conversion_QTD, INDEX_Monto_Conversion_QTD]
@@ -1531,15 +1621,21 @@ view: fact_ventas {
 
 
       html:
-          {% if value > 0 %}
-          <span style="color: green;">{{ rendered_value }}</span></p>
-          {% elsif  value < 0 %}
-          <span style="color: red;">{{ rendered_value }}</span></p>
-          {% elsif  value == 0 %}
-          {{rendered_value}}
-          {% else %}
-          {{rendered_value}}
-          {% endif %} ;;
+      {% if value > 0 %}
+      {% assign indicator = "green,▲" | split: ',' %}
+      {% else %}
+      {% assign indicator = "red,▼" | split: ',' %}
+      {% endif %}
+
+      <font color="{{indicator[0]}}">
+
+      {% if value == 99999.12345 %} &infin
+
+      {% else %}{{rendered_value}}
+
+      {% endif %} {{indicator[1]}}
+
+      </font> ;;
 
 
         drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_Conversion_QTD,LY_Ptto_Conversion_QTD, INDEX_Ptto_Conversion_QTD]
@@ -1593,15 +1689,21 @@ view: fact_ventas {
         sql: (${Monto_QTD} - ${LY_Monto_QTD}) / NULLIF(${LY_Monto_QTD},0)*100 ;;
 
         html:
-          {% if value > 0 %}
-          <span style="color: green;">{{ rendered_value }}</span></p>
-          {% elsif  value < 0 %}
-          <span style="color: red;">{{ rendered_value }}</span></p>
-          {% elsif  value == 0 %}
-          {{rendered_value}}
-          {% else %}
-          {{rendered_value}}
-          {% endif %} ;;
+        {% if value > 0 %}
+        {% assign indicator = "green,▲" | split: ',' %}
+        {% else %}
+        {% assign indicator = "red,▼" | split: ',' %}
+        {% endif %}
+
+        <font color="{{indicator[0]}}">
+
+        {% if value == 99999.12345 %} &infin
+
+        {% else %}{{rendered_value}}
+
+        {% endif %} {{indicator[1]}}
+
+        </font> ;;
 
 
         drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Monto_QTD,LY_Monto_QTD, INDEX_Monto_QTD]
@@ -2029,16 +2131,24 @@ view: fact_ventas {
               sql: (${Monto_SEM} - ${Ptto_SEM}) / NULLIF(${Ptto_SEM},0)*100 ;;
 
 
+
+
               html:
-                        {% if value > 0 %}
-                        <span style="color: green;">{{ rendered_value }}</span></p>
-                        {% elsif  value < 0 %}
-                        <span style="color: red;">{{ rendered_value }}</span></p>
-                        {% elsif  value == 0 %}
-                        {{rendered_value}}
-                        {% else %}
-                        {{rendered_value}}
-                        {% endif %} ;;
+              {% if value > 0 %}
+              {% assign indicator = "green,▲" | split: ',' %}
+              {% else %}
+              {% assign indicator = "red,▼" | split: ',' %}
+              {% endif %}
+
+              <font color="{{indicator[0]}}">
+
+              {% if value == 99999.12345 %} &infin
+
+              {% else %}{{rendered_value}}
+
+              {% endif %} {{indicator[1]}}
+
+              </font> ;;
 
 
                 drill_fields: [dim_planta.nombre_planta,dim_grupoclientes.descripcion,Ptto_SEM,LY_Ptto_SEM, INDEX_Ptto_SEM]
