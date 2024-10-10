@@ -3,7 +3,7 @@ view: fact_ventas {
   derived_table: {
     sql: SELECT *
                ,DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY) ACTUALIZACION
-         FROM `envases-analytics-qa.RPT_ALU.Fact_Ventas` ;;
+         FROM `envases-analytics-qa.RPT_ALU.Fact_Ventas`  ;;
   }
 
 #############FILTROS Y PARAMETROS
@@ -138,7 +138,10 @@ view: fact_ventas {
   dimension: cantidad {
     hidden: yes
     type: number
-    sql: ${TABLE}.Cantidad/ 1000 ;;
+    sql: ${TABLE}.Cantidad/ 1000
+
+
+    ;;
   }
 
   dimension: moneda_transaccion {
@@ -387,10 +390,14 @@ view: fact_ventas {
     type: sum
     sql: ${cantidad} ;;
 
+
+
     filters: {
       field: periodo_dia
       value: "yes"
     }
+
+
 
     filters: [tipo_transaccion: "Venta"]
 
@@ -510,6 +517,8 @@ view: fact_ventas {
     label: "QTY_MTD"
     type: sum
     sql: ${cantidad} ;;
+
+
 
     filters: {
       field: is_current_period
