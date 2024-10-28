@@ -100,7 +100,7 @@ view: fact_ventas {
 
 
   dimension: material {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.Material ;;
   }
