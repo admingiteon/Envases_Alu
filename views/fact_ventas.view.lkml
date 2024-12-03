@@ -766,7 +766,7 @@ view: fact_ventas {
 
   measure: INDEX_Ptto_Conversion_MTD {
     group_label: "Mensual-Ptto Conversion"
-    label: "% VS Ptto MTD MX"
+    label: "% VS Ptto Conversion MTD MX"
     type: number
     sql: (${Monto_Conversion_MTD} - ${Ptto_Conversion_MTD} ) / NULLIF(${Ptto_Conversion_MTD},0)*100 ;;
 
